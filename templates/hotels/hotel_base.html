@@ -52,7 +52,7 @@
         <!-- Dashboard -->
         <li class="nav-item">
           {% if hotel %}
-            <a href="{% url 'hotels:hotel_dashboard' hotel.id %}" class="nav-link">
+            <a href="{% url 'hotels:hotel_dashboard'%}" class="nav-link">
           {% else %}
             <a href="#" class="nav-link">
           {% endif %}

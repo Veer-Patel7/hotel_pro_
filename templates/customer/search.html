@@ -1,34 +1,109 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Search Hotels</title>
+    <meta charset="UTF-8">
+    <title>HotelPro | Luxury Stays</title>
+    <link rel="stylesheet" href="{% static 'css/search.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
 
-<h2>Search Hotels</h2>
+<!-- ================= NAVBAR ================= -->
+<header class="navbar">
+    <div class="logo">
+        <a href="/">HotelPro</a>
+    </div>
 
-<form>
-    <label>Location</label><br>
-    <input type="text" placeholder="Enter city"><br><br>
+    {% comment %} <div class="profile-container">
+        {% if request.user.is_authenticated %}
+        
+            <div class="profile-dropdown">
+                
+                <!-- Profile Circle -->
+                <div class="profile-btn">
+                    {{ request.user.username|first|upper }}
+                </div>
 
-    <label>Check-in</label><br>
-    <input type="date"><br><br>
+                <!-- Dropdown Menu -->
+                <div class="dropdown-menu">
+                    <a href="{% url 'profile_dashboard' %}">My Profile</a>
+                    <a href="{% url 'booking_details' %}">My Bookings</a>
+                    <a href="{% url 'logout' %}">Logout</a>
+                </div>
 
-    <label>Check-out</label><br>
-    <input type="date"><br><br>
+            </div>
 
-    <label>Persons</label><br>
-    <input type="number" value="1"><br><br>
+        {% else %}
+            <a href="{% url 'customer_login' %}" class="profile-btn">
+                <i class="fa-solid fa-user"></i>
+            </a>
+        {% endif %}
+    </div> {% endcomment %}
+</header>
 
-    <button type="submit">Search</button>
-</form>
 
-<hr>
+<!-- ================= HERO ================= -->
+<section class="hero">
+    <div class="hero-content">
+        <h1>Welcome To <br>Hotel Pro</h1>
+        <p>Discover premium hotels at unbeatable prices.</p>
 
-<h3>Demo Hotel List</h3>
+        <form method="POST" action="{% url 'search_results' %}" class="search-card">
+            {% csrf_token %}
 
-<a href="/hotel/1/">Hotel Paradise</a><br>
-<a href="/hotel/2/">Hotel Royal</a>
+            <div class="input-group">
+                <label>Location</label>
+                <input type="text" name="location" placeholder="Enter city" required>
+            </div>
+
+            <div class="input-group">
+                <label>Check In</label>
+                <input type="date" name="checkin" required>
+            </div>
+
+            <div class="input-group">
+                <label>Check Out</label>
+                <input type="date" name="checkout" required>
+            </div>
+
+            <div class="input-group">
+                <label>Guests</label>
+                <input type="number" name="persons" placeholder="Numbers of Guests" min="1">
+            </div>
+
+            <div class="input-group">
+                <label>Rooms</label>
+                <input type="number" name="rooms" placeholder="Numbers Of Rooms" min="1">
+            </div>
+
+            <button type="submit" class="search-btn">Search</button>
+        </form>
+    </div>
+</section>
+
+
+<!-- ================= RESULTS ================= -->
+<section class="results">
+    <h2>Available Hotels</h2>
+
+    <div class="hotel-grid">
+        {% if hotels %}
+            {% for hotel in hotels %}
+            <div class="hotel-card">
+                <div class="hotel-info">
+                    <h3>{{ hotel.hotel_name }}</h3>
+                    <p class="city">{{ hotel.city }}</p>
+                    <p class="price"> {{ hotel.price_per_night }} <span>/ night</span></p>
+                </div>
+                <a href="{% url 'customer_signup' %}" class="book-btn">Book Now</a>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p class="no-result">No hotels found.</p>
+        {% endif %}
+    </div>
+</section>
 
 </body>
 </html>

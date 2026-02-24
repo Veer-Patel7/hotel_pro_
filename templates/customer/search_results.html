@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/search_result.css' %}">
+</head>
+<body>
+
+<h1>Available Hotels</h1>
+
+<section class="results-section">
+    <div class="hotel-grid">
+        {% if hotels %}
+            {% for hotel in hotels %}
+            <div class="hotel-card">
+                <div class="hotel-info">
+                    <h3>{{ hotel.hotel_name }}</h3>
+                    <p class="city">{{ hotel.city }}</p>
+                    <p class="price"> {{ hotel.price_per_night }} <span>/ night</span></p>
+                </div>
+                <a href="{% url 'customer_signup' %}" class="book-btn">Book Now</a>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p class="no-result">No hotels found.</p>
+        {% endif %}
+    </div>
+    {% comment %} <div class="hotel-container">
+
+        {% if hotels %}
+            {% for hotel in hotels %}
+                <div class="hotel-card">
+                    <h3>{{ hotel.hotel_name }}</h3>
+                    <p>{{ hotel.city }}</p>
+                    <p>₹{{ hotel.price_per_night }}/night</p>
+
+                    <a href="{% url 'customer_signup' %}" class="btn-book">
+                        Book Now
+                    </a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No hotels found.</p>
+        {% endif %}
+    </div> {% endcomment %}
+</section>
+
+</body>
+</html>

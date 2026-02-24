@@ -1,0 +1,213 @@
+{% extends "hotels/hotel_base.html" %}
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- Page Header -->
+    <div class="row mb-3">
+        <div class="col-sm-6">
+            <h3>Room Management</h3>
+        </div>
+    </div>
+
+    <!-- ============================= -->
+    <!-- ADD ROOM CATEGORY -->
+    <!-- ============================= -->
+    <div class="card card-info mb-4">
+        <div class="card-header">
+            <h5 class="card-title">Add Room Category</h5>
+        </div>
+
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="row">
+
+                    <div class="col-md-3">
+                        <label>Room Type</label>
+                        {{ category_form.room_type }}
+                    </div>
+
+                    <div class="col-md-2">
+                        <label>Size (sqft)</label>
+                        {{ category_form.room_size }}
+                    </div>
+
+                    <div class="col-md-2">
+                        <label>Max Guest</label>
+                        {{ category_form.max_guest }}
+                    </div>
+
+                    <div class="col-md-2">
+                        <label>Price</label>
+                        {{ category_form.price_per_night }}
+                    </div>
+
+                    <div class="col-md-2">
+                        <label>Total Rooms</label>
+                        {{ category_form.total_rooms }}
+                    </div>
+
+                </div>
+
+                <button type="submit" name="add_category" value="1"
+                        class="btn btn-primary mt-3">
+                    <i class="fas fa-plus"></i> Add Category
+                </button>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- ============================= -->
+    <!-- CATEGORY LIST -->
+    <!-- ============================= -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="card-title">Room Categories</h5>
+        </div>
+
+        <div class="card-body table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Size</th>
+                        <th>Max Guest</th>
+                        <th>Price</th>
+                        <th>Total Rooms</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                {% for category in categories %}
+                <tr>
+                    <td>{{ category.get_room_type_display }}</td>
+                    <td>{{ category.room_size }} sqft</td>
+                    <td>{{ category.max_guest }}</td>
+                    <td>₹ {{ category.price_per_night }}</td>
+                    <td>{{ category.total_rooms }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">
+                        No categories added yet.
+                    </td>
+                </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ============================= -->
+    <!-- ADD ROOM -->
+    <!-- ============================= -->
+    <div class="card card-primary mb-4">
+        <div class="card-header">
+            <h5 class="card-title">Add New Room</h5>
+        </div>
+
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <label>Room Category</label>
+                        {{ room_form.category }}
+                    </div>
+
+                    <div class="col-md-4">
+                        <label>Room Number</label>
+                        {{ room_form.room_number }}
+                    </div>
+
+                    <div class="col-md-4">
+                        <label>Status</label>
+                        {{ room_form.status }}
+                    </div>
+
+                </div>
+
+                <button type="submit" name="add_room" value="1"
+                        class="btn btn-success mt-3">
+                    <i class="fas fa-plus"></i> Add Room
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ============================= -->
+    <!-- ROOM LIST -->
+    <!-- ============================= -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title">Your Rooms</h5>
+        </div>
+
+        <div class="card-body table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Room No</th>
+                        <th>Category</th>
+                        <th>Size</th>
+                        <th>Max Guest</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                        <th width="150">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                {% for room in rooms %}
+                <tr>
+                    <td>{{ room.room_number }}</td>
+                    <td>{{ room.category.get_room_type_display }}</td>
+                    <td>{{ room.category.room_size }} sqft</td>
+                    <td>{{ room.category.max_guest }}</td>
+                    <td>₹ {{ room.category.price_per_night }}</td>
+
+                    <td>
+                        {% if room.status == "available" %}
+                            <span class="badge badge-success">Available</span>
+                        {% elif room.status == "maintenance" %}
+                            <span class="badge badge-warning">Maintenance</span>
+                        {% else %}
+                            <span class="badge badge-danger">Blocked</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        <a href="{% url 'hotels:edit_room' room.id %}" 
+                           class="btn btn-sm btn-warning">
+                            <i class="fas fa-edit"></i>
+                        </a>
+
+                        <a href="{% url 'hotels:delete_room' room.id %}" 
+                           class="btn btn-sm btn-danger"
+                           onclick="return confirm('Are you sure?')">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center">
+                        No rooms added yet.
+                    </td>
+                </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

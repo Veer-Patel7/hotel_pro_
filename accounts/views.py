@@ -70,7 +70,7 @@ def hotel_login(request):
         hotel = Hotel.objects.filter(owner=user).first()
 
         if hotel:
-            return redirect('hotels:hotel_dashboard', hotel_id=hotel.id)
+            return redirect('hotels:hotel_dashboard')
         else:
             return redirect('/hotel/register/')
 
@@ -166,10 +166,11 @@ def hotel_signup(request):
         )
 
         send_mail(
-            "OTP Verification",
-            f"Your OTP is {otp}",
-            settings.EMAIL_HOST_USER,
-            [email],
+            subject="OTP Verification - HotelPro",
+            message=f"Hello,\n\nYour OTP is: {otp}\n\nThank You.",
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[email],
+            fail_silently=False,
         )
 
         messages.success(request, "OTP sent to your email")
