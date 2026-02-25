@@ -46,7 +46,7 @@
 <!-- ================= HERO ================= -->
 <section class="hero">
     <div class="hero-content">
-        <h1>Welcome To <br>Hotel Pro</h1>
+        <h1>Welcome To<br><I>Hotel Pro</I></h1>
         <p>Discover premium hotels at unbeatable prices.</p>
 
         <form method="POST" action="{% url 'search_results' %}" class="search-card">
@@ -84,24 +84,58 @@
 
 
 <!-- ================= RESULTS ================= -->
+<!-- ================= RESULTS ================= -->
 <section class="results">
     <h2>Available Hotels</h2>
 
     <div class="hotel-grid">
+
         {% if hotels %}
             {% for hotel in hotels %}
             <div class="hotel-card">
+
+                <!-- Hotel Image -->
+                <div class="hotel-image">
+                    {% if hotel.image %}
+                        <img src="{{ hotel.image.url }}" alt="{{ hotel.hotel_name }}">
+                    {% else %}
+                        <img src="{% static 'images/default-hotel.jpg' %}" alt="Hotel">
+                    {% endif %}
+                </div>
+
+                <!-- Hotel Info -->
                 <div class="hotel-info">
                     <h3>{{ hotel.hotel_name }}</h3>
-                    <p class="city">{{ hotel.city }}</p>
-                    <p class="price"> {{ hotel.price_per_night }} <span>/ night</span></p>
+                    <p class="location">
+                        <i class="fa-solid fa-location-dot"></i>
+                        {{ hotel.city }}
+                    </p>
+
+                    <div class="price-section">
+                        <span class="min-price">
+                            ₹ {{ hotel.min_price|default:"0" }}
+                        </span>
+
+                        {% if hotel.max_price and hotel.max_price != hotel.min_price %}
+                            <span class="max-price">
+                                to ₹ {{ hotel.max_price }}
+                            </span>
+                        {% endif %}
+
+                        <span class="per-night"> / night</span>
+                    </div>
+
+                    <a href="{% url 'hotel_detail' hotel.id %}" class="book-btn">
+                        View Details
+                    </a>
                 </div>
-                <a href="{% url 'customer_signup' %}" class="book-btn">Book Now</a>
+
             </div>
             {% endfor %}
         {% else %}
             <p class="no-result">No hotels found.</p>
         {% endif %}
+
     </div>
 </section>
 

@@ -1,7 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from reviews.models import Review
-from hotels.models import Hotel
+from hotels.models import Hotel, Room
+from django.db.models import Min, Max
 
 
 # @login_required(login_url="/login/")
@@ -12,10 +13,16 @@ from hotels.models import Hotel
 def customer_search(request):
     hotels = Hotel.objects.all()
 
-    location = request.GET.get("location")
+    location = request.POST.get("location")
 
     if location:
-        hotels = Hotel.objects.filter(city__icontains=location)
+        hotels = hotels.filter(city__icontains=location)
+
+    # Add min and max price from related rooms
+    hotels = hotels.annotate(
+        min_price=Min("rooms__category__price_per_night"),
+        max_price=Max("rooms__category__price_per_night")
+    )
 
     return render(request, "customer/search.html", {
         "hotels": hotels
@@ -49,6 +56,29 @@ def hotel_list(request):
 
 def room_select(request, room_id):
     return render(request, "customer/room_select.html", {"room_id": room_id})
+
+def hotel_detail(request, pk):
+
+    hotel = get_object_or_404(Hotel, pk=pk)
+
+    # Show only available rooms
+    available_rooms = Room.objects.filter(
+        hotel=hotel,
+        status="available"
+    ).select_related("category")
+
+    # Minimum price
+    min_price = available_rooms.aggregate(
+        Min("category__price_per_night")
+    )["category__price_per_night__min"]
+
+    context = {
+        "hotel": hotel,
+        "rooms": available_rooms,
+        "min_price": min_price,
+    }
+
+    return render(request, "customer/hotel_detail.html", context)
 
 @login_required(login_url="/login/")
 def booking_details(request):

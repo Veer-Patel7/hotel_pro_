@@ -9,6 +9,9 @@ urlpatterns = [
     # path('hotel/<int:hotel_id>/', views.hotel_detail, name="hotel_detail"),
     path('room/<int:room_id>/', views.room_select, name="room_select"),
     path('search_hotel/', views.search_results, name='search_results'),
+    
+    # Hotel details
+    path("hotel/<int:pk>/", views.hotel_detail, name="hotel_detail"),
     # Booking details
     path('hotel/', views.hotel_list, name='hotel_list'),
 

@@ -1,0 +1,64 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #f4f6f9;
+    margin: 0;
+}
+
+.container {
+    width: 90%;
+    margin: 30px auto;
+}
+
+.hotel-header h1 {
+    margin-bottom: 5px;
+}
+
+.hotel-header p {
+    color: #666;
+}
+
+.hotel-image img {
+    width: 100%;
+    height: 350px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin: 20px 0;
+}
+
+.hotel-description {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+
+.room-section h2 {
+    margin-bottom: 20px;
+}
+
+.room-card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.price {
+    font-weight: bold;
+    color: #28a745;
+}
+
+.book-btn {
+    background: #007bff;
+    color: #fff;
+    padding: 8px 18px;
+    border-radius: 6px;
+    text-decoration: none;
+}
+
+.book-btn:hover {
+    background: #0056b3;
+}
