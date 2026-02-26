@@ -1,0 +1,113 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Location Information</title>
+    <link rel="stylesheet" href="{% static 'css/location_page.css' %}">
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAP_API_KEY"></script>
+</head>
+<body>
+
+<div class="container">
+
+    <h2>Location Information</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="form-group checkbox">
+            {{ form.use_current_location }}
+            <label>Use My Current Location</label>
+            <button type="button" onclick="getLocation()" class="detect-btn">
+                Detect Location
+            </button>
+        </div>
+
+        {{ form.latitude }}
+        {{ form.longitude }}
+
+        <div class="form-group">
+            <label>House / Building / Apartment No</label>
+            {{ form.house_no }}
+        </div>
+
+        <div class="form-group">
+            <label>Locality / Area / Street</label>
+            {{ form.area }}
+        </div>
+
+        <div class="form-group">
+            <label>Pincode</label>
+            {{ form.pincode }}
+        </div>
+
+        <div class="form-group">
+            <label>Country</label>
+            {{ form.country }}
+        </div>
+
+        <div class="form-group">
+            <label>State</label>
+            {{ form.state }}
+        </div>
+
+        <div class="form-group">
+            <label>City</label>
+            {{ form.city }}
+        </div>
+
+        <div id="map"></div>
+
+        <div class="form-group checkbox">
+            {{ form.terms_accepted }}
+            <label>I accept Terms & Conditions</label>
+        </div>
+
+        <button type="submit" class="next-btn">
+            Save & Continue
+        </button>
+
+    </form>
+
+</div>
+
+<script>
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+    } else {
+        alert("Geolocation not supported.");
+    }
+}
+
+function showPosition(position) {
+    let lat = position.coords.latitude;
+    let lng = position.coords.longitude;
+
+    document.getElementById("id_latitude").value = lat;
+    document.getElementById("id_longitude").value = lng;
+
+    initMap(lat, lng);
+}
+
+function initMap(lat = 20.5937, lng = 78.9629) {
+    const location = { lat: parseFloat(lat), lng: parseFloat(lng) };
+
+    const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 15,
+        center: location,
+    });
+
+    new google.maps.Marker({
+        position: location,
+        map: map,
+    });
+}
+
+window.onload = function() {
+    initMap();
+};
+</script>
+
+</body>
+</html>

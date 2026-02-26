@@ -11,17 +11,19 @@ from django.db.models import Min, Max
 
 # ================= NORMAL VIEWS =================
 def customer_search(request):
+
     hotels = Hotel.objects.all()
 
-    location = request.POST.get("location")
+    if request.method == "POST":
+        location = request.POST.get("location")
 
-    if location:
-        hotels = hotels.filter(city__icontains=location)
+        if location:
+            hotels = hotels.filter(city__icontains=location)
 
-    # Add min and max price from related rooms
+    # Annotate min and max price from RoomCategory
     hotels = hotels.annotate(
-        min_price=Min("rooms__category__price_per_night"),
-        max_price=Max("rooms__category__price_per_night")
+        min_price=Min("room_categories__base_rate"),
+        max_price=Max("room_categories__base_rate")
     )
 
     return render(request, "customer/search.html", {

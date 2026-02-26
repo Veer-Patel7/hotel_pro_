@@ -1,0 +1,160 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Location Information</title>
+    <link rel="stylesheet" href="{% static 'css/location_page.css' %}">
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAP_API_KEY"></script>
+</head>
+<body>
+
+
+<style>
+.drop-zone {
+    border: 2px dashed #ccc;
+    padding: 40px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.preview-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.image-card {
+    position: relative;
+}
+
+.image-card img {
+    width: 200px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.cover-badge {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    background: gold;
+    padding: 3px 8px;
+    font-size: 12px;
+    border-radius: 5px;
+}
+
+.action-buttons {
+    margin-top: 5px;
+    display: flex;
+    gap: 5px;
+}
+</style>
+
+<div class="container">
+    <h2>Hotel Images (3–5)</h2>
+
+    <form method="POST" enctype="multipart/form-data" id="upload-form">
+        {% csrf_token %}
+        <div class="drop-zone" id="drop-zone">
+            Drag & Drop Images Here or Click to Upload
+            <input type="file" name="images" id="file-input" multiple hidden>
+        </div>
+
+        <div class="preview-container" id="preview"></div>
+
+        <button type="submit">Upload Images</button>
+    </form>
+
+    <hr>
+
+    <h3>Uploaded Images</h3>
+
+    <div class="preview-container">
+        {% for img in images %}
+        <div class="image-card">
+            {% if img.is_cover %}
+                <div class="cover-badge">Cover</div>
+            {% endif %}
+
+            <img src="{{ img.image.url }}">
+
+            <div class="action-buttons">
+                <a href="{% url 'hotels:set_cover' img.id %}">Set Cover</a>
+                <a href="{% url 'hotels:delete_image' img.id %}" style="color:red;">Delete</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<hr>
+
+<div style="margin-top:30px; text-align:center;">
+
+    {% if can_submit %}
+        <a href="{% url 'hotels:final_submission' %}" style="padding:12px 25px; background:green; color:white; border-radius:8px;">
+            Final Submit Hotel
+        </a>
+    {% else %}
+        <button onclick="showWarning()" 
+                style="padding:12px 25px; background:gray; color:white; border-radius:8px;">
+            Final Submit Hotel
+        </button>
+    {% endif %}
+
+</div>
+
+<script>
+const dropZone = document.getElementById("drop-zone");
+const fileInput = document.getElementById("file-input");
+const preview = document.getElementById("preview");
+
+dropZone.addEventListener("click", () => fileInput.click());
+
+dropZone.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    dropZone.style.background = "#f0f0f0";
+});
+
+dropZone.addEventListener("dragleave", () => {
+    dropZone.style.background = "";
+});
+
+dropZone.addEventListener("drop", (e) => {
+    e.preventDefault();
+    fileInput.files = e.dataTransfer.files;
+    previewImages(e.dataTransfer.files);
+});
+
+fileInput.addEventListener("change", () => {
+    previewImages(fileInput.files);
+});
+
+function previewImages(files) {
+    preview.innerHTML = "";
+    Array.from(files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const img = document.createElement("img");
+            img.src = e.target.result;
+            img.style.width = "200px";
+            img.style.height = "150px";
+            img.style.objectFit = "cover";
+            img.style.borderRadius = "8px";
+            preview.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+function showWarning() {
+    alert("Please upload minimum 3 pictures before final submission.");
+}
+</script>
+
+
+</body>
+</html>

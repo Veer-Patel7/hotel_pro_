@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Basic Info | Hotel Admin</title>
+    <link rel="stylesheet" href="{% static 'css/admin_basic.css' %}">
+</head>
+<body>
+
+<div class="container">
+
+    <h2>Basic Information</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="form-section">
+            <h3>Property Details</h3>
+
+            <div class="form-group">
+                <label>Property Name</label>
+                {{ form.property_name }}
+            </div>
+
+            <div class="form-group">
+                <label>Star Rating</label>
+                {{ form.star_rating }}
+            </div>
+
+            <div class="form-group">
+                <label>Year Built</label>
+                {{ form.year_built }}
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>Contact Information</h3>
+
+            <div class="form-group">
+                <label>Mobile Number</label>
+                {{ form.mobile_number }}
+            </div>
+
+            <div class="form-group">
+                <label>Email Address</label>
+                {{ form.email }}
+            </div>
+        </div>
+
+        <button type="submit" class="next-btn">
+            Save & Continue
+        </button>
+
+    </form>
+
+</div>
+
+</body>
+</html>

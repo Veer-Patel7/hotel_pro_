@@ -72,7 +72,7 @@ def hotel_login(request):
         if hotel:
             return redirect('hotels:hotel_dashboard')
         else:
-            return redirect('/hotel/register/')
+            return redirect('/hotel/basic-info/')
 
 
     return render(request, "hotel_login.html")

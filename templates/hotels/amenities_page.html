@@ -1,0 +1,27 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Location Information</title>
+    <link rel="stylesheet" href="{% static 'css/location_page.css' %}">
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAP_API_KEY"></script>
+</head>
+<body>
+
+<div class="container">
+    <h2>Amenities</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label>Amenities</label>
+            {{ form.amenities }}
+        </div>
+
+        <button type="submit" class="btn-submit">Save & Continue</button>
+    </form>
+</div>
+
+</body>
+</html>

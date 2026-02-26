@@ -1,0 +1,67 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Location Information</title>
+    <link rel="stylesheet" href="{% static 'css/location_page.css' %}">
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAP_API_KEY"></script>
+</head>
+<body>
+
+
+<div class="container">
+    <h2>Final Hotel Review</h2>
+
+    <h3>Basic Info</h3>
+    <p><strong>Name:</strong> {{ hotel.property_name }}</p>
+    <p><strong>Star Rating:</strong> {{ hotel.star_rating }}</p>
+    <p><strong>Year Built:</strong> {{ hotel.year_built }}</p>
+    <p><strong>Mobile:</strong> {{ hotel.mobile_number }}</p>
+    <p><strong>Email:</strong> {{ hotel.email }}</p>
+
+    <hr>
+
+    <h3>Location</h3>
+    <p>{{ hotel.house_no }}, {{ hotel.locality }}</p>
+    <p>{{ hotel.city }}, {{ hotel.state }} - {{ hotel.pincode }}</p>
+
+    <hr>
+
+    <h3>Amenities</h3>
+    <p>{{ hotel.amenities }}</p>
+
+    <hr>
+
+    <h3>Room Categories</h3>
+    {% for room in rooms %}
+        <div style="margin-bottom:15px;">
+            <strong>{{ room.room_name }}</strong> -
+            {{ room.get_room_type_display }} -
+            ₹ {{ room.base_rate }} / night
+        </div>
+    {% endfor %}
+
+    <hr>
+
+    <h3>Images</h3>
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        {% for img in images %}
+            <img src="{{ img.image.url }}" width="200" height="150" style="object-fit:cover;">
+        {% endfor %}
+    </div>
+
+    <hr>
+
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" 
+                style="padding:12px 30px; background:#1e90ff; color:white; border-radius:8px;">
+            Confirm & Submit Hotel
+        </button>
+    </form>
+</div>
+
+
+
+</body>
+</html>
